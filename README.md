@@ -1,5 +1,7 @@
 # Lumen Axis — scroll landing page
 
+**تعديل المحتوى (فيديوهات، نصوص، API):** عدّل ملف **`src/config/site.config.ts`** فقط ثم ادفع إلى GitHub — Netlify و GitHub Pages يعيدان البناء تلقائياً.
+
 Single-page React (Vite) landing with **Framer Motion**: viewport-triggered reveals (`whileInView` + `once`), **parallax** via `useScroll` / `useTransform`, and a spring-smoothed scroll progress indicator.
 
 ## Scripts

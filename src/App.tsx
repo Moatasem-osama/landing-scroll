@@ -1,15 +1,19 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 import { CapabilityStrip } from "./components/CapabilityStrip";
 import { ProcessSection } from "./components/ProcessSection";
 import { ParallaxShowcase } from "./components/ParallaxShowcase";
+import { WorkSpotlight } from "./components/WorkSpotlight";
 import { MetricsSection } from "./components/MetricsSection";
 import { CTASection } from "./components/CTASection";
 import { Footer } from "./components/Footer";
+import { getWorkById } from "./config/site.config";
 
 export default function App() {
+  const [activeWorkId, setActiveWorkId] = useState<string | null>(null);
+  const activeWork = getWorkById(activeWorkId);
   const pageRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: pageRef,
@@ -35,7 +39,11 @@ export default function App() {
           <Hero />
           <CapabilityStrip />
           <ProcessSection />
-          <ParallaxShowcase />
+          <ParallaxShowcase
+            selectedId={activeWorkId}
+            onSelectProject={setActiveWorkId}
+          />
+          <WorkSpotlight active={activeWork} />
           <MetricsSection />
           <CTASection />
         </main>

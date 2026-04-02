@@ -6,26 +6,21 @@ import {
   useTransform,
 } from "framer-motion";
 import { Reveal } from "./Reveal";
+import { WORK_PROJECTS } from "../config/site.config";
 
-const panels = [
-  {
-    tag: "Atlas",
-    title: "Telemetry console",
-    tone: "linear-gradient(145deg, #1a2230, #0f141c)",
-  },
-  {
-    tag: "Northwind",
-    title: "Commerce rhythm",
-    tone: "linear-gradient(145deg, #1c2520, #0e1210)",
-  },
-  {
-    tag: "Helio",
-    title: "Brand launch",
-    tone: "linear-gradient(145deg, #241a28, #100c12)",
-  },
-];
+type Props = {
+  selectedId: string | null;
+  onSelectProject: (id: string) => void;
+};
 
-export function ParallaxShowcase() {
+function scrollToSpotlight() {
+  document.getElementById("work-spotlight")?.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
+}
+
+export function ParallaxShowcase({ selectedId, onSelectProject }: Props) {
   const ref = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
@@ -51,7 +46,8 @@ export function ParallaxShowcase() {
         <Reveal direction="up" delay={0.12}>
           <p className="section-lede showcase-lede">
             Parallax rows below respond to scroll — backgrounds slide gently while cards stay
-            readable. Original labels and palettes; no borrowed identities.
+            readable. <strong className="showcase-hint">اضغط كارتًا</strong> للانتقال إلى قسم
+            الفيديو والتفاصيل أدناه.
           </p>
         </Reveal>
       </div>
@@ -68,19 +64,31 @@ export function ParallaxShowcase() {
           aria-hidden
         />
 
-        <div className="showcase-rail">
-          {panels.map((p, i) => (
-            <Reveal key={p.tag} direction="up" delay={0.06 * i} amount={0.2}>
-              <article
-                className="showcase-card"
-                style={{ background: p.tone }}
-              >
-                <span className="showcase-tag">{p.tag}</span>
-                <h3 className="showcase-card-title">{p.title}</h3>
-                <p className="showcase-card-meta">Case study · Motion &amp; UI</p>
-              </article>
-            </Reveal>
-          ))}
+        <div className="showcase-rail" role="list">
+          {WORK_PROJECTS.map((p, i) => {
+            const isSelected = selectedId === p.id;
+            return (
+              <Reveal key={p.id} direction="up" delay={0.06 * i} amount={0.2}>
+                <div className="showcase-card-slot" role="listitem">
+                  <button
+                    type="button"
+                    className={`showcase-card${isSelected ? " showcase-card--selected" : ""}`}
+                    style={{ background: p.tone }}
+                    onClick={() => {
+                      onSelectProject(p.id);
+                      scrollToSpotlight();
+                    }}
+                    aria-pressed={isSelected}
+                    aria-label={`${p.title} — عرض الفيديو والتفاصيل`}
+                  >
+                    <span className="showcase-tag">{p.tag}</span>
+                    <span className="showcase-card-title">{p.title}</span>
+                    <span className="showcase-card-meta">اضغط للتفاصيل · فيديو + API</span>
+                  </button>
+                </div>
+              </Reveal>
+            );
+          })}
         </div>
       </div>
 
@@ -115,6 +123,10 @@ export function ParallaxShowcase() {
           color: var(--text-muted);
           line-height: 1.65;
           font-size: 1rem;
+        }
+        .showcase-hint {
+          color: var(--accent);
+          font-weight: 600;
         }
         .showcase-stage {
           position: relative;
@@ -155,7 +167,11 @@ export function ParallaxShowcase() {
             gap: 1.25rem;
           }
         }
+        .showcase-card-slot {
+          height: 100%;
+        }
         .showcase-card {
+          width: 100%;
           min-height: 200px;
           padding: 1.5rem;
           border-radius: var(--radius);
@@ -163,12 +179,25 @@ export function ParallaxShowcase() {
           display: flex;
           flex-direction: column;
           justify-content: flex-end;
+          align-items: flex-start;
+          text-align: left;
           box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
-          transition: transform 0.3s ease, border-color 0.3s ease;
+          transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+          cursor: pointer;
+          font: inherit;
+          color: inherit;
         }
         .showcase-card:hover {
           transform: translateY(-6px) scale(1.01);
           border-color: rgba(110, 231, 197, 0.35);
+        }
+        .showcase-card:focus-visible {
+          outline: 2px solid var(--accent);
+          outline-offset: 3px;
+        }
+        .showcase-card--selected {
+          border-color: rgba(110, 231, 197, 0.65);
+          box-shadow: 0 24px 56px rgba(110, 231, 197, 0.15);
         }
         .showcase-tag {
           font-size: 0.7rem;
