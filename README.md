@@ -27,10 +27,14 @@ git push -u origin master
 
 ### Enable GitHub Pages (first time only)
 
-On GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions**.  
-Every push to `main` or `master` runs `.github/workflows/deploy-github-pages.yml` and publishes `dist/`.
+The workflow pushes the built site to the **`gh-pages`** branch (no `deploy-pages` API — avoids 404 if Actions wasn’t enabled as a Pages source).
 
-Your site URL: `https://YOUR_USER.github.io/YOUR_REPO/` (Vite `base` is set from `BASE_URL` in that workflow).
+1. Push this repo to GitHub, then wait until **Actions** finishes successfully (creates `gh-pages`).
+2. On GitHub: **Settings → Pages → Build and deployment**.
+3. **Source:** **Deploy from a branch** (not “GitHub Actions”).
+4. **Branch:** `gh-pages` · **Folder:** `/ (root)` → **Save**.
+
+Site URL: `https://YOUR_USER.github.io/YOUR_REPO/` — `BASE_URL` in the workflow matches the repo name for assets.
 
 ## Netlify (continuous deploy from Git)
 
